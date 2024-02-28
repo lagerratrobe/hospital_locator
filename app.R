@@ -49,7 +49,9 @@ ui <- fluidPage(
     # Main panel for displaying outputs ----
     mainPanel(
       # Leaflet Map centered on input coords
-      leafletOutput("leafletMap")
+      leafletOutput("leafletMap"),
+      # Output: HTML table with requested number of observations ----
+      tableOutput("table_data")
     )
   )
   
@@ -88,6 +90,11 @@ server <- function(input, output) {
       addMarkers( lng = as.numeric(longitude()), 
                   lat = as.numeric(latitude()) ) |>
       addProviderTiles("CartoDB.Positron")
+  })
+  
+  # DT table section
+  output$table_data <- renderTable({
+    st_drop_geometry( closest_five() )
   })
   
 }
