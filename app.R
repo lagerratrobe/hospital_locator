@@ -24,17 +24,23 @@ ui <- fluidPage(
   sidebarLayout(
     sidebarPanel(
       width = 3,
-      # Latitude input box
-      textInput(inputId = "latitude",
-                label = h4("Latitude"),
-                value = "47.53319",
-                placeholder = "47.53319",
+      # Street input box
+      textInput(inputId = "street",
+                label = h4("Street Number"),
+                value = "7717 30th Ave SW",
+                placeholder = "7717 30th Ave SW",
                 width = '50%'),
-      # Longitude input box
-      textInput(inputId = "longitude",
-                label = h4("Longitude"),
-                value = "-122.3727",
-                placeholder = "-122.3727",
+      # City input box
+      textInput(inputId = "city",
+                label = h4("City"),
+                value = "Seattle",
+                placeholder = "Seattle",
+                width = '50%'),
+      # State input box
+      textInput(inputId = "state",
+                label = h4("State"),
+                value = "WA",
+                placeholder = "WA",
                 width = '50%'),
       # Submit button
       submitButton("Submit", icon("refresh"))
@@ -53,12 +59,16 @@ ui <- fluidPage(
 server <- function(input, output) {
   
   # Get the coordinates from imput boxes
-  latitude <- reactive({input$latitude})
-  longitude <- reactive({input$longitude})
+  coords <- reactive({
+    getGeocodeCoords(street = input$street , city = input$city, state = input$state)
+  })
+  
+  latitude <- reactive({coords()[2]})
+  longitude <- reactive({coords()[1]})
   
   # Do the distance calcs and get closest 5
   closest_five <- reactive({
-    closestFive(input$latitude, input$longitude, hosp_data)
+    closestFive(latitude(), longitude(), hosp_data)
   })
   
   bbox <- reactive({
