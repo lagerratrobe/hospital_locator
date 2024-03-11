@@ -7,11 +7,10 @@ library(dplyr)
 
 getData <- function() {
   df <- readRDS(
-    url("https://github.com/lagerratrobe/nearest_neighbor/raw/main/Data/usa_hospitals.RDS")) |>  
+    url("https://raw.githubusercontent.com/lagerratrobe/hospital_locator/main/usa_hospitals.RDS")) |>  
     filter(STATUS == "OPEN") |>
     filter(!TRAUMA == "NOT AVAILABLE") |>
     filter(!TYPE == "REHABILITATION") 
-  
   return(st_as_sf(df, coords = c("LONGITUDE", "LATITUDE"),  crs = 4326))
 }
 
